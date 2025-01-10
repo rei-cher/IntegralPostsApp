@@ -12,7 +12,7 @@ export default function FeedScreen({navigation}) {
         const post = supabase
             .channel('public:posts')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, (payload) => {
-                fetchPosts(); // Refetch posts to get updated data with usernames
+                fetchPosts(); // refetch posts to get updated data with usernames
             })
             .subscribe();
 
@@ -24,7 +24,7 @@ export default function FeedScreen({navigation}) {
     const fetchPosts = async () => {
         const { data, error } = await supabase
             .from('posts')
-            .select('id, content, created_at, profiles(username)')
+            .select('id, content, created_at, user_id ,profiles(username)')
             .order('created_at', { ascending: false });
 
         if (error) {
@@ -40,7 +40,7 @@ export default function FeedScreen({navigation}) {
             <FlatList
                 className='border border-gray-300 rounded py-3'
                 data={posts}
-                renderItem={({item}) => <PostList post={item}/>}
+                renderItem={({item}) => <PostList post={item} navigation={navigation}/>}
                 keyExtractor={(item) => item.id.toString()}
             />
 

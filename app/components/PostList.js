@@ -1,7 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
-export default function PostList({post}) {
+export default function PostList({post, navigation}) {
+
+    console.log(post);
+
+    const handleUsernameClick = () => {
+        if (post.user_id) {
+            navigation.navigate('Profile', {userId: post.user_id});
+        } else {
+            console.error("Error: user_id is undefined.");
+        }
+    };
+
     return (
         <View className="bg-white rounded-lg shadow-md p-4 my-2 mx-4 border border-gray-200">
         
@@ -15,9 +26,16 @@ export default function PostList({post}) {
                 <Text className="text-sm text-gray-500">
                     {new Date(post.created_at).toLocaleString()}
                 </Text>
-                <Text className="text-xs text-blue-500 font-semibold">
-                    User: {post.profiles?.username || "Unknown User"}
-                </Text>
+                <View className="flex-row items-center">
+                    <Text className="text-xs text-black font-semibold">
+                        User: 
+                    </Text>
+                    <TouchableOpacity onPress={handleUsernameClick}>
+                        <Text className="text-xs text-blue-400 px-1">
+                            {post.profiles?.username || "Unknown User"}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     )
