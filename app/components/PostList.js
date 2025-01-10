@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 
 export default function PostList({post, navigation}) {
 
-    console.log(post);
+    // console.log(post);
 
     const handleUsernameClick = () => {
         if (post.user_id) {
