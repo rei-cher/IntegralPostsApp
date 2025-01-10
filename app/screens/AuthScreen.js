@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { supabase } from '../supabaseClient';
 
 export default function AuthScreen({ navigation }) {
-    const [email, setEmail] = useState('');
+    const [input, setInput] = useState('');
     const [password, setPassword] = useState('');
 
     useEffect(() => {
@@ -25,6 +25,27 @@ export default function AuthScreen({ navigation }) {
 
     async function handleLogin() {
         console.log("Login pressed")
+
+        let email = input; // initial assignment for email
+        
+        // check if input has @ sign
+        // if not then it is a username
+        if (!input.includes('@')) {
+            const {data, error} = await supabase
+                .from('profiles')
+                .select('email')
+                .eq('username', input)
+                .single()
+            
+            if (error) {
+                console.log(`Error fetching email for usermame: ${error}`);
+                Alert.alert("Invalid username or email");
+                return;
+            }
+
+            // get email associated with username
+            email = data.email;
+        }
 
         // supabase auth
         const { error} = await supabase.auth.signInWithPassword({
@@ -48,10 +69,10 @@ export default function AuthScreen({ navigation }) {
 
             {/* Email input */}
             <TextInput
-                placeholder='email'
+                placeholder='email or username'
                 className='border border-gray-300 rounded-lg p-3 mb-3'
-                onChangeText={setEmail}
-                value={email}
+                onChangeText={setInput}
+                value={input}
             />
     
             {/* Password input */}
