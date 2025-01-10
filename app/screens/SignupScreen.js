@@ -9,7 +9,25 @@ export default function SignupScreen({navigation}) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
     const handleSignup = async () => {
+
+        // validate email
+        if (!isValidEmail(email)) {
+            Alert.alert("Invalid Email", "Please enter a valid email address.");
+            return;
+        }
+
+        // check for username not to have '@'
+        if (username.includes('@')) {
+            Alert.alert("Invalid Username", "Username cannot contain the '@' symbol.");
+            return;
+        }
+
         try{
             // sign up user
             const {data: {user}, error} = await supabase.auth.signUp({

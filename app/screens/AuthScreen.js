@@ -23,6 +23,11 @@ export default function AuthScreen({ navigation }) {
         checkSession();
     }, [])
 
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
     async function handleLogin() {
         console.log("Login pressed")
 
@@ -30,7 +35,13 @@ export default function AuthScreen({ navigation }) {
         
         // check if input has @ sign
         // if not then it is a username
-        if (!input.includes('@')) {
+        if (input.includes('@')) {
+            if (!isValidEmail(input)) {
+                Alert.alert("Invalid email format. Please enter a valid email.");
+                return;
+            }
+        }
+        else {
             const {data, error} = await supabase
                 .from('profiles')
                 .select('email')
