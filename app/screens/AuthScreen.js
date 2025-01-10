@@ -27,21 +27,19 @@ export default function AuthScreen({ navigation }) {
         console.log("Login pressed")
 
         // supabase auth
-        const {data: {session}, error} = await supabase.auth.signInWithPassword({
+        const { error} = await supabase.auth.signInWithPassword({
             email: email,
             password: password
         });
 
-        if (session) {
-            // auto login if session is in storage
-            console.log("Session success");
-            navigation.replace("Feed");
-        }
-
         if (error) {
             console.log("Error: ", error);
             Alert.alert(error.message);
+            return;
         }
+
+        console.log("Login successful");
+        navigation.replace("Feed");
     }
     
     return (
