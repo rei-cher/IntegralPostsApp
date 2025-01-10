@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, Alert } from "react-native";
 import { supabase } from "../supabaseClient";
 
 export default function PostInput({onPost, navigation}) {
@@ -7,21 +7,29 @@ export default function PostInput({onPost, navigation}) {
 
     const handlePost = async () => {
         const {data: {session}} = await supabase.auth.getSession();
-        const user = session?.user;
+        const user = session?.user; // get the logged user
+
         if (!user) {
             alert ('You must be logged in to post.');
             return;
         }
 
-        const {error} = await supabase.from('posts').insert({content: content, user_id: user.id});
-        console.log(content);
-        if (error) {
-            alert('Error posting message: ', error.message);
+        // if content is empty dont post
+        if (content){
+            // insert a new post
+            const {error} = await supabase.from('posts').insert({content: content, user_id: user.id});
+            console.log(content);
+            if (error) {
+                alert('Error posting message: ', error.message);
+            }
+            else {
+                console.log('Post added: ', content);
+                setContent('');
+                onPost(); // trigger post fetch
+            }
         }
         else {
-            console.log('Post added: ', content);
-            setContent('');
-            onPost();
+            Alert.alert("You can not post empty content");
         }
     };
 
@@ -37,6 +45,7 @@ export default function PostInput({onPost, navigation}) {
 
     return (
         <View className='absolute bottom-0 w-full bg-white px-4 py-2 border-t border-gray-200'>
+            {/* Input field */}
             <TextInput
                 placeholder="Write a post ..."
                 className='border border-gray-300 rounded-lg p-3 mb-2 w-full'
@@ -44,8 +53,8 @@ export default function PostInput({onPost, navigation}) {
                 onChangeText={setContent}
             />
 
-            {/* Container for buttons */}
-            <View className="flex-row justify-evenly">
+            {/* Buttons */}
+            <View className="flex-row justify-evenly py-3">
                 <TouchableOpacity
                     onPress={handlePost}
                     className="bg-blue-400 rounded-full p-3 w-32 h-12 flex justify-center items-center"

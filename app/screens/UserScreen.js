@@ -14,6 +14,7 @@ export default function UserScreen({route, navigation}) {
     }, []);
 
     const fetchUserData = async () => {
+        // fetch user details from the profiles table
         const { data, error } = await supabase
             .from('profiles')
             .select('*')
@@ -27,6 +28,7 @@ export default function UserScreen({route, navigation}) {
         }
     };
 
+    // fetch posts made by the user
     const fetchUserPosts = async () => {
         const { data, error } = await supabase
             .from('posts')
@@ -46,9 +48,22 @@ export default function UserScreen({route, navigation}) {
             {user && (
                 <View className="bg-white rounded-lg shadow-md p-4 mb-4">
                     <Text className="flex text-4xl font-bold text-center">User Details</Text>
-                    <Text className="text-lg text-gray-700"><Text className="font-semibold">Username: </Text>{user.username}</Text>
-                    <Text className="text-lg text-gray-700"><Text className="font-semibold">First Name: </Text>{user.firstName}</Text>
-                    <Text className="text-lg text-gray-700"><Text className="font-semibold">Last Name: </Text>{user.lastName}</Text>
+
+                    <Text className="text-lg text-gray-700">
+                        <Text className="font-semibold">Username: </Text>
+                        {user.username}
+                    </Text>
+
+                    <Text className="text-lg text-gray-700">
+                        <Text className="font-semibold">First Name: </Text>
+                        {user.firstName}
+                    </Text>
+
+                    <Text className="text-lg text-gray-700">
+                        <Text className="font-semibold">Last Name: </Text>
+                        {user.lastName}
+                    </Text>
+
                     <Text className="text-lg text-gray-700"><Text className="font-semibold">Registered: </Text>{new Date(user.created_at).toLocaleString()}</Text>
                 </View>
             )}

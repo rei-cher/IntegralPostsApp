@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import FeedScreen from "../screens/FeedScreen";
 import AuthScreen from "../screens/AuthScreen";
 import SignupScreen from "../screens/SignupScreen";
-import UserScreen from "../screens/UserProfile";
+import UserScreen from "../screens/UserScreen";
 
 const Stack = createStackNavigator();
 

@@ -23,12 +23,6 @@ export const getSession = async () => {
   return session.data.session;
 };
 
-// log out
-// TODO: implement logging out
-export const logout = async () => {
-  await supabase.auth.signOut();
-};
-
 // app state shanges
 AppState.addEventListener('change', async (state) => {
     if (state === 'active') {

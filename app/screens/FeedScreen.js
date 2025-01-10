@@ -8,16 +8,18 @@ export default function FeedScreen({navigation}) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
+        // initial posts
         fetchPosts();
+
         const post = supabase
-            .channel('public:posts')
+            .channel('public:posts') // real time updates for posts
             .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, (payload) => {
                 fetchPosts(); // refetch posts to get updated data with usernames
             })
             .subscribe();
 
         return () => {
-            supabase.removeChannel(post);
+            supabase.removeChannel(post); // cleanup on component unmount
         };
     }, []);
 
@@ -37,6 +39,7 @@ export default function FeedScreen({navigation}) {
     return (
         <View className='flex-1 bg-gray-100 pt-10'>
 
+            {/* Post list */}
             <FlatList
                 className='border border-gray-300 rounded py-3'
                 data={posts}
@@ -44,6 +47,7 @@ export default function FeedScreen({navigation}) {
                 keyExtractor={(item) => item.id.toString()}
             />
 
+            {/* Post input */}
             <PostInput onPost={fetchPosts} navigation={navigation}/>    
         </View>
     )
