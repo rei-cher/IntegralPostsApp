@@ -4,7 +4,7 @@ import { supabase } from '../supabaseClient';
 
 export default function AuthScreen({ navigation }) {
     const [email, setEmail] = useState('test@email.com');
-    const [password, setPassword] = useState('test');
+    const [password, setPassword] = useState('test1234');
 
     async function handleLogin() {
         console.log("Login pressed")

@@ -16,7 +16,7 @@ export default function PostList({post}) {
                     {new Date(post.created_at).toLocaleString()}
                 </Text>
                 <Text className="text-xs text-blue-500 font-semibold">
-                    User ID: {post.user_id}
+                    User: {post.profiles?.username || "Unknown User"}
                 </Text>
             </View>
         </View>

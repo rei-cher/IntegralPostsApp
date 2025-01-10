@@ -11,19 +11,27 @@ export default function FeedScreen() {
         fetchPosts();
         const post = supabase
             .channel('public:posts')
-            .on('postgres_changes', {event: '*', schema: 'public', table: 'posts'}, (payload) => {
-                setPosts((prev) => [payload.new, ...prev]);
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, (payload) => {
+                fetchPosts(); // Refetch posts to get updated data with usernames
             })
             .subscribe();
 
-            return () => {
-                supabase.removeChannel(post);
-            }
+        return () => {
+            supabase.removeChannel(post);
+        };
     }, []);
 
     const fetchPosts = async () => {
-        const {data, error} = await supabase.from('posts').select('*').order('created_at', {ascending: false});
-        if (!error) setPosts(data);
+        const { data, error } = await supabase
+            .from('posts')
+            .select('id, content, created_at, profiles(username)')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error("Error fetching posts:", error);
+        } else {
+            setPosts(data);
+        }
     };
 
     return (
