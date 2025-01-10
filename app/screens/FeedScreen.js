@@ -4,7 +4,7 @@ import PostInput from "../components/PostInput";
 import PostList from "../components/PostList";
 import { supabase } from "../supabaseClient";
 
-export default function FeedScreen() {
+export default function FeedScreen({navigation}) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -35,7 +35,7 @@ export default function FeedScreen() {
     };
 
     return (
-        <View className='flex-1 bg-gray-100'>
+        <View className='flex-1 bg-gray-100 pt-10'>
 
             <FlatList
                 className='border border-gray-300 rounded py-3'
@@ -44,7 +44,7 @@ export default function FeedScreen() {
                 keyExtractor={(item) => item.id.toString()}
             />
 
-            <PostInput onPost={fetchPosts}/>    
+            <PostInput onPost={fetchPosts} navigation={navigation}/>    
         </View>
     )
 }

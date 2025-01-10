@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text } from "react-native";
 import { supabase } from "../supabaseClient";
 
-export default function PostInput({onPost}) {
+export default function PostInput({onPost, navigation}) {
     const [content, setContent] = useState('');
 
     const handlePost = async () => {
@@ -25,6 +25,16 @@ export default function PostInput({onPost}) {
         }
     };
 
+    const handleLogout = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            alert('Error logging out: ', error.message);
+        } else {
+            console.log('Logged out successfully');
+            navigation.navigate('Auth');
+        }
+    };
+
     return (
         <View className='absolute bottom-0 w-full bg-white px-4 py-2 border-t border-gray-200'>
             <TextInput
@@ -34,12 +44,22 @@ export default function PostInput({onPost}) {
                 onChangeText={setContent}
             />
 
-            <TouchableOpacity 
-                onPress={handlePost}
-                className='bg-blue-400 rounded-full p-3 self-center w-32 h-12'
-            >
-                <Text className='text-lg font-semibold text-white text-center'>Post</Text>
-            </TouchableOpacity>
+            {/* Container for buttons */}
+            <View className="flex-row justify-evenly">
+                <TouchableOpacity
+                    onPress={handlePost}
+                    className="bg-blue-400 rounded-full p-3 w-32 h-12 flex justify-center items-center"
+                >
+                    <Text className="text-lg font-semibold text-white text-center">Post</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={handleLogout}
+                    className="bg-red-400 rounded-full p-3 w-32 h-12 flex justify-center items-center"
+                >
+                    <Text className="text-lg font-semibold text-white text-center">Exit</Text>
+                </TouchableOpacity>
+            </View>
             
         </View>
     );
